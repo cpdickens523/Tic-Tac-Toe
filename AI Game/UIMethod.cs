@@ -4,9 +4,21 @@ namespace MyApp
 {
     internal static class UIMethod
     {
+       
+        private const int MinDisplayMode = 1;
+        private const int MaxDisplayMode = 3;
+
+       
+        private const char BorderChar = '#';
+        private const int CellWidth = 4;
+
+       
+        private const string WelcomeMessage = "Welcome to Tic-Tac-Toe against AI!";
+        private const string InvalidInputMessage = "Invalid input. Enter 1, 2, or 3.";
+
         public static void DisplayWelcomeMessage()
         {
-            Console.WriteLine("Welcome to Tic-Tac-Toe against AI!");
+            Console.WriteLine(WelcomeMessage);
         }
 
         public static int GetUserChoice()
@@ -18,9 +30,12 @@ namespace MyApp
 
             string input = Console.ReadLine();
             int choice;
-            while (!int.TryParse(input, out choice) || choice < 1 || choice > 3)
+
+            while (!int.TryParse(input, out choice) ||
+                   choice < MinDisplayMode ||
+                   choice > MaxDisplayMode)
             {
-                Console.WriteLine("Invalid input. Enter 1, 2, or 3.");
+                Console.WriteLine(InvalidInputMessage);
                 input = Console.ReadLine();
             }
 
@@ -29,18 +44,22 @@ namespace MyApp
 
         public static void DisplayBoard(int[,] board, int mode)
         {
-            string border = new string('#', (board.GetLength(1) * 4) + 2);
+            int columns = board.GetLength(1);
+            string border = new string(BorderChar, (columns * CellWidth) + 2);
+
             Console.WriteLine(border);
 
             for (int i = 0; i < board.GetLength(0); i++)
             {
-                Console.Write("#");
-                for (int j = 0; j < board.GetLength(1); j++)
+                Console.Write(BorderChar);
+
+                for (int j = 0; j < columns; j++)
                 {
                     string cell = Logic.GetCellDisplay(board[i, j], mode);
-                    Console.Write(cell.PadLeft(4));
+                    Console.Write(cell.PadLeft(CellWidth));
                 }
-                Console.WriteLine("#");
+
+                Console.WriteLine(BorderChar);
             }
 
             Console.WriteLine(border);
