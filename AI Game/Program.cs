@@ -1,28 +1,29 @@
 ﻿using System;
+using System.Runtime.Intrinsics.X86;
 
 namespace MyApp
 {
     internal class Program
     {
        
-        private const int BoardSize = 3;
+        private const int BOARD_SIZE = 3;
 
         
-        private const int PlayerOne = 1;
-        private const int PlayerTwo = 2;
+        private const int PLAYER_ONE = 1;
+        private const int PLAYER_TWO = 2;
 
        
-        private const int MinIndex = 0;
-        private const int MaxIndex = BoardSize - 1;
+        private const int MIN_INDEX = 0;
+        private const int MAX_INDEX = BOARD_SIZE - 1;
 
         static void Main(string[] args)
         {
             UIMethod.DisplayWelcomeMessage();
 
             int mode = UIMethod.GetUserChoice();
-            int[,] board = Logic.GenerateEmptyBoard(BoardSize, BoardSize);
+            int[,] board = Logic.GenerateEmptyBoard(BOARD_SIZE, BOARD_SIZE);
 
-            int currentPlayer = PlayerOne;
+            int currentPlayer = PLAYER_ONE;
             bool gameOver = false;
 
             Random rng = new Random();
@@ -31,16 +32,16 @@ namespace MyApp
             {
                 UIMethod.DisplayBoard(board, mode);
 
-                if (currentPlayer == PlayerOne)
+                if (currentPlayer == PLAYER_ONE)
                 {
                     int row, col;
 
                     while (true)
                     {
-                        Console.Write($"Enter row ({MinIndex}-{MaxIndex}): ");
+                        Console.Write($"Enter row ({MIN_INDEX}-{MAX_INDEX}): ");
                         row = int.Parse(Console.ReadLine());
 
-                        Console.Write($"Enter col ({MinIndex}-{MaxIndex}): ");
+                        Console.Write($"Enter col ({MIN_INDEX}-{MAX_INDEX}): ");
                         col = int.Parse(Console.ReadLine());
 
                         if (Logic.PlacePiece(board, row, col, currentPlayer))
@@ -55,8 +56,8 @@ namespace MyApp
 
                     do
                     {
-                        row = rng.Next(MinIndex, BoardSize);
-                        col = rng.Next(MinIndex, BoardSize);
+                        row = rng.Next(MIN_INDEX, BOARD_SIZE);
+                        col = rng.Next(MIN_INDEX, BOARD_SIZE);
                     }
                     while (!Logic.PlacePiece(board, row, col, currentPlayer));
 
@@ -67,7 +68,7 @@ namespace MyApp
                 {
                     UIMethod.DisplayBoard(board, mode);
 
-                    string winner = currentPlayer == PlayerOne ? "You" : "AI";
+                    string winner = currentPlayer == PLAYER_ONE ? "You" : "AI";
                     Console.WriteLine($"{winner} win!");
 
                     gameOver = true;
@@ -79,9 +80,9 @@ namespace MyApp
                     gameOver = true;
                 }
 
-                currentPlayer = currentPlayer == PlayerOne
-                    ? PlayerTwo
-                    : PlayerOne;
+                currentPlayer = currentPlayer == PLAYER_ONE
+                    ? PLAYER_TWO
+                    : PLAYER_ONE;
             }
         }
     }
