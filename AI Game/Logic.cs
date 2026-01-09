@@ -12,7 +12,7 @@ namespace MyApp
         private const int MODE_NUMBERS = 2;
         private const int MODE_REVERSED_XO = 3;
 
-        private const int WIN_LENGTH = 3;
+        private const int WIN_LENGTH = 3; 
         private const int CHECK_ONE = 'X';
         private const int CHECK_TWO = 'O';
 
@@ -34,88 +34,124 @@ namespace MyApp
                 _ => "?"
             };
         }
-        
-            public static bool PlacePiece(int[,] board, int row, int col, int player)
+
+        public static bool PlacePiece(int[,] board, int row, int col, int player)
+        {
+            if (board[row, col] != EMPTY_CELL)
+                return false;
+
+            board[row, col] = player;
+            return true;
+        }
+
+        internal static bool CheckWin(int[,] board, int player)
+        {
+            return CheckHorizontal(board, player)
+                   || CheckVertical(board, player)
+                   || CheckDiagonal(board, player);
+        }
+
+        internal static bool CheckHorizontal(int[,] board, int player)
+        {
+            int rows = board.GetLength(0);
+            int cols = board.GetLength(1);
+
+            for (int row = 0; row < rows; row++)
             {
-                if (board[row, col] != EMPTY_CELL)
+                for (int col = 0; col <= cols - WIN_LENGTH; col++)
+                {
+                    bool win = true;
+                    for (int k = 0; k < WIN_LENGTH; k++)
+                    {
+                        if (board[row, col + k] != player)
+                        {
+                            win = false;
+                            break;
+                        }
+                    }
+                    if (win) return true;
+                }
+            }
+            return false;
+        }
+
+        internal static bool CheckVertical(int[,] board, int player)
+        {
+            int rows = board.GetLength(0);
+            int cols = board.GetLength(1);
+
+            for (int col = 0; col < cols; col++)
+            {
+                for (int row = 0; row <= rows - WIN_LENGTH; row++)
+                {
+                    bool win = true;
+                    for (int k = 0; k < WIN_LENGTH; k++)
+                    {
+                        if (board[row + k, col] != player)
+                        {
+                            win = false;
+                            break;
+                        }
+                    }
+                    if (win) return true;
+                }
+            }
+            return false;
+        }
+
+        internal static bool CheckDiagonal(int[,] board, int player)
+        {
+            int rows = board.GetLength(0);
+            int cols = board.GetLength(1);
+            
+            for (int row = 0; row <= rows - WIN_LENGTH; row++)
+            {
+                for (int col = 0; col <= cols - WIN_LENGTH; col++)
+                {
+                    bool win = true;
+                    for (int k = 0; k < WIN_LENGTH; k++)
+                    {
+                        if (board[row + k, col + k] != player)
+                        {
+                            win = false;
+                            break;
+                        }
+                    }
+                    if (win) return true;
+                }
+            }
+            
+            for (int row = 0; row <= rows - WIN_LENGTH; row++)
+            {
+                for (int col = WIN_LENGTH - 1; col < cols; col++)
+                {
+                    bool win = true;
+                    for (int k = 0; k < WIN_LENGTH; k++)
+                    {
+                        if (board[row + k, col - k] != player)
+                        {
+                            win = false;
+                            break;
+                        }
+                    }
+                    if (win) return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool IsDraw(int[,] board)
+        {
+            foreach (int cell in board)
+            {
+                if (cell == EMPTY_CELL)
                     return false;
-
-                board[row, col] = player;
-                return true;
             }
-
-            internal static bool CheckWin(int[,] board, int player)
-            {
-                return CheckHorizontal(board, player)
-                       || CheckVertical(board, player)
-                       || CheckDiagonal(board, player);
-            }
-
-            internal static bool CheckHorizontal(int[,] board, int player)
-            {
-                int size = board.GetLength(0);
-
-                for (int row = 0; row < size; row++)
-                {
-                    if (board[row, 0] == player &&
-                        board[row, 1] == player &&
-                        board[row, 2] == player)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            internal static bool CheckVertical(int[,] board, int player)
-            {
-                int size = board.GetLength(1);
-
-                for (int col = 0; col < size; col++)
-                {
-                    if (board[0, col] == player &&
-                        board[1, col] == player &&
-                        board[2, col] == player)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            internal static bool CheckDiagonal(int[,] board, int player)
-            {
-                if (board[0, 0] == player &&
-                    board[1, 1] == player &&
-                    board[2, 2] == player)
-                {
-                    return true;
-                }
-
-                if (board[0, 2] == player &&
-                    board[1, 1] == player &&
-                    board[2, 0] == player)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            internal static bool IsDraw(int[,] board)
-            {
-                foreach (int cell in board)
-                {
-                    if (cell == EMPTY_CELL)
-                        return false;
-                }
-
-                return true;
-            }
+            return true;
         }
     }
+}
 
 
 
