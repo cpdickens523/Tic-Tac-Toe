@@ -56,25 +56,30 @@ namespace MyApp
             int rows = board.GetLength(0);
             int cols = board.GetLength(1);
 
-            for (int row = 0; row < rows; row++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int col = 0; col <= cols - WIN_LENGTH; col++)
+                for (int startCol = 0; startCol <= cols - WIN_LENGTH; startCol++)
                 {
-                    bool win = true;
-                    for (int k = 0; k < WIN_LENGTH; k++)
+                    bool rowWin = true;
+
+                    for (int j = 0; j < WIN_LENGTH; j++)
                     {
-                        if (board[row, col + k] != player)
+                        if (board[i, startCol + j] != player)
                         {
-                            win = false;
+                            rowWin = false;
                             break;
                         }
                     }
-                    if (win) return true;
+
+                    if (rowWin)
+                    {
+                        return true;
+                    }
                 }
             }
+
             return false;
         }
-
         internal static bool CheckVertical(int[,] board, int player)
         {
             int rows = board.GetLength(0);
