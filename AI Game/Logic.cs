@@ -12,7 +12,7 @@ namespace MyApp
         private const int MODE_NUMBERS = 2;
         private const int MODE_REVERSED_XO = 3;
 
-        private const int WIN_LENGTH = 3; 
+        private const int WIN_LENGTH = 3;
         private const int CHECK_ONE = 'X';
         private const int CHECK_TWO = 'O';
 
@@ -47,8 +47,8 @@ namespace MyApp
         internal static bool CheckWin(int[,] board, int player)
         {
             return CheckHorizontal(board, player)
-                   || CheckVertical(board, player)
-                   || CheckDiagonal(board, player);
+                || CheckVertical(board, player)
+                || CheckDiagonal(board, player);
         }
 
         internal static bool CheckHorizontal(int[,] board, int player)
@@ -56,22 +56,13 @@ namespace MyApp
             int rows = board.GetLength(0);
             int cols = board.GetLength(1);
 
-            for (int i = 0; i < rows; i++)
+            for (int row = 0; row < rows; row++)
             {
-                for (int startCol = 0; startCol <= cols - WIN_LENGTH; startCol++)
+                for (int col = 0; col <= cols - WIN_LENGTH; col++)
                 {
-                    bool rowWin = true;
-
-                    for (int j = 0; j < WIN_LENGTH; j++)
-                    {
-                        if (board[i, startCol + j] != player)
-                        {
-                            rowWin = false;
-                            break;
-                        }
-                    }
-
-                    if (rowWin)
+                    if (board[row, col] == player &&
+                        board[row, col + 1] == player &&
+                        board[row, col + 2] == player)
                     {
                         return true;
                     }
@@ -80,6 +71,7 @@ namespace MyApp
 
             return false;
         }
+
         internal static bool CheckVertical(int[,] board, int player)
         {
             int rows = board.GetLength(0);
@@ -89,18 +81,15 @@ namespace MyApp
             {
                 for (int row = 0; row <= rows - WIN_LENGTH; row++)
                 {
-                    bool win = true;
-                    for (int k = 0; k < WIN_LENGTH; k++)
+                    if (board[row, col] == player &&
+                        board[row + 1, col] == player &&
+                        board[row + 2, col] == player)
                     {
-                        if (board[row + k, col] != player)
-                        {
-                            win = false;
-                            break;
-                        }
+                        return true;
                     }
-                    if (win) return true;
                 }
             }
+
             return false;
         }
 
@@ -108,38 +97,32 @@ namespace MyApp
         {
             int rows = board.GetLength(0);
             int cols = board.GetLength(1);
-            
+
+            // Top-left → bottom-right
             for (int row = 0; row <= rows - WIN_LENGTH; row++)
             {
                 for (int col = 0; col <= cols - WIN_LENGTH; col++)
                 {
-                    bool win = true;
-                    for (int k = 0; k < WIN_LENGTH; k++)
+                    if (board[row, col] == player &&
+                        board[row + 1, col + 1] == player &&
+                        board[row + 2, col + 2] == player)
                     {
-                        if (board[row + k, col + k] != player)
-                        {
-                            win = false;
-                            break;
-                        }
+                        return true;
                     }
-                    if (win) return true;
                 }
             }
-            
+
+            // Top-right → bottom-left
             for (int row = 0; row <= rows - WIN_LENGTH; row++)
             {
                 for (int col = WIN_LENGTH - 1; col < cols; col++)
                 {
-                    bool win = true;
-                    for (int k = 0; k < WIN_LENGTH; k++)
+                    if (board[row, col] == player &&
+                        board[row + 1, col - 1] == player &&
+                        board[row + 2, col - 2] == player)
                     {
-                        if (board[row + k, col - k] != player)
-                        {
-                            win = false;
-                            break;
-                        }
+                        return true;
                     }
-                    if (win) return true;
                 }
             }
 
@@ -153,10 +136,14 @@ namespace MyApp
                 if (cell == EMPTY_CELL)
                     return false;
             }
+
             return true;
         }
     }
 }
+
+                        
+
 
 
 
